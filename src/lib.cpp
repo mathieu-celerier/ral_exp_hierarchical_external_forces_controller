@@ -1,5 +1,5 @@
-#include "NewFSMController.h"
+#include <RALExpController/RALExpController.h>
 
 #include <mc_control/mc_controller.h>
 
-CONTROLLER_CONSTRUCTOR("NewFSMController", NewFSMController)
+CONTROLLER_CONSTRUCTOR("RALExpController", RALExpController)

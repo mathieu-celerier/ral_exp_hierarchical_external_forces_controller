@@ -1,8 +1,8 @@
 {
-  "name": "mc-rtc-new-fsm-controller",
+  "name": "ral-exp-external-forces-controller",
   "version-string": "1.0.0",
   "homepage": "",
-  "description": "NewFSMController for mc_rtc",
+  "description": "RALExpController for mc_rtc",
   "dependencies": [
     "mc-rtc"
   ]
