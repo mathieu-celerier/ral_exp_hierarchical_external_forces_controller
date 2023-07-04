@@ -14,4 +14,9 @@ struct RALExpController_VelLimitNoEF : mc_control::fsm::State
   void teardown(mc_control::fsm::Controller & ctl) override;
 
 private:
+  double elapsedTime_;
+  double jointVel;
+  double upperLimit;
+  double lowerLimit;
+  double maxLimitCross_;
 };

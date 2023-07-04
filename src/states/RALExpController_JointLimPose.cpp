@@ -1,10 +1,10 @@
-#include "RALExpController_VelLimitPose.h"
+#include "RALExpController_JointLimPose.h"
 
 #include <RALExpController/RALExpController.h>
 
-void RALExpController_VelLimitPose::configure(const mc_rtc::Configuration & config) {}
+void RALExpController_JointLimPose::configure(const mc_rtc::Configuration & config) {}
 
-void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
+void RALExpController_JointLimPose::start(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
   ctl.solver().removeConstraintSet(ctl.dynamicsConstraint);
@@ -25,8 +25,8 @@ void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
   ctl.datastore().call<void, double>("EF_Estimator::setGain", HIGH_RESIDUAL_GAIN);
 
   // Setting gain of posture task for torque control mode
-  ctl.compPostureTask->stiffness(2.0);
-  ctl.compPostureTask->target(ctl.postureVelLimit);
+  ctl.compPostureTask->stiffness(0.5);
+  ctl.compPostureTask->target(ctl.postureJointLim);
   ctl.compPostureTask->makeCompliant(false);
   ctl.solver().removeTask(ctl.eeTask);
 
@@ -34,15 +34,22 @@ void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
   mc_rtc::log::success("[RALExpController] Switched to Sensor Testing state - Position controlled");
 }
 
-bool RALExpController_VelLimitPose::run(mc_control::fsm::Controller & ctl_)
+bool RALExpController_JointLimPose::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
   if(ctl.compPostureTask->eval().norm() < 0.001)
   {
     if(ctl.sequenceOutput.compare("FINISHED") == 0)
     {
-      ctl.sequenceOutput = "B";
-      ctl.velLimitCounter = 0;
+      if(ctl.jointLimitCounter > 0)
+      {
+        ctl.sequenceOutput = "B";
+        ctl.jointLimitCounter = 0;
+      }
+      else
+      {
+        ctl.sequenceOutput = "A";
+      }
     }
 
     output(ctl.sequenceOutput);
@@ -51,9 +58,9 @@ bool RALExpController_VelLimitPose::run(mc_control::fsm::Controller & ctl_)
   return false;
 }
 
-void RALExpController_VelLimitPose::teardown(mc_control::fsm::Controller & ctl_)
+void RALExpController_JointLimPose::teardown(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
 }
 
-EXPORT_SINGLE_STATE("RALExpController_VelLimitPose", RALExpController_VelLimitPose)
+EXPORT_SINGLE_STATE("RALExpController_JointLimPose", RALExpController_JointLimPose)

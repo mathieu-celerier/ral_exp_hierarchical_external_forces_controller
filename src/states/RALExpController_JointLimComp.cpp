@@ -1,19 +1,26 @@
-#include "RALExpController_VelLimitPose.h"
+#include "RALExpController_JointLimComp.h"
 
+#include <mc_tvm/Robot.h>
 #include <RALExpController/RALExpController.h>
 
-void RALExpController_VelLimitPose::configure(const mc_rtc::Configuration & config) {}
+void RALExpController_JointLimComp::configure(const mc_rtc::Configuration & config) {}
 
-void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
+void RALExpController_JointLimComp::start(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
+
+  // Modify robot module to add limits to 3rd joint, to chowcase compliance and safety on joint limits
+  auto & tvm_robot = ctl.robot().tvmRobot();
+  tvm_robot.limits().ql[2] = -1.57;
+  tvm_robot.limits().qu[2] = 1.57;
+
   ctl.solver().removeConstraintSet(ctl.dynamicsConstraint);
   ctl.dynamicsConstraint = mc_rtc::unique_ptr<mc_solver::DynamicsConstraint>(
       new mc_solver::DynamicsConstraint(ctl.robots(), 0, ctl.solver().dt(), {0.1, 0.01, 0.5}, 0.6, false, true));
   ctl.solver().addConstraintSet(ctl.dynamicsConstraint);
 
   // Deactivate feedback from external forces estimator (safer)
-  if(ctl.datastore().call<bool>("EF_Estimator::isActive"))
+  if(!ctl.datastore().call<bool>("EF_Estimator::isActive"))
   {
     ctl.datastore().call("EF_Estimator::toggleActive");
   }
@@ -25,24 +32,28 @@ void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
   ctl.datastore().call<void, double>("EF_Estimator::setGain", HIGH_RESIDUAL_GAIN);
 
   // Setting gain of posture task for torque control mode
-  ctl.compPostureTask->stiffness(2.0);
-  ctl.compPostureTask->target(ctl.postureVelLimit);
-  ctl.compPostureTask->makeCompliant(false);
+  ctl.compPostureTask->stiffness(10.0);
+  ctl.compPostureTask->target(ctl.postureJointLim);
+  ctl.compPostureTask->makeCompliant(true);
   ctl.solver().removeTask(ctl.eeTask);
 
-  ctl.datastore().assign<std::string>("ControlMode", "Position");
+  elapsedTime_ = 0;
+  ctl.jointLimitCounter++;
+
+  ctl.datastore().assign<std::string>("ControlMode", "Torque");
   mc_rtc::log::success("[RALExpController] Switched to Sensor Testing state - Position controlled");
 }
 
-bool RALExpController_VelLimitPose::run(mc_control::fsm::Controller & ctl_)
+bool RALExpController_JointLimComp::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  if(ctl.compPostureTask->eval().norm() < 0.001)
+  elapsedTime_ += ctl.timeStep;
+
+  if(elapsedTime_ >= ctl.jointLimitDuration)
   {
-    if(ctl.sequenceOutput.compare("FINISHED") == 0)
+    if(ctl.jointLimitCounter > ctl.jointLimitCount)
     {
-      ctl.sequenceOutput = "B";
-      ctl.velLimitCounter = 0;
+      ctl.sequenceOutput = "FINISHED";
     }
 
     output(ctl.sequenceOutput);
@@ -51,9 +62,9 @@ bool RALExpController_VelLimitPose::run(mc_control::fsm::Controller & ctl_)
   return false;
 }
 
-void RALExpController_VelLimitPose::teardown(mc_control::fsm::Controller & ctl_)
+void RALExpController_JointLimComp::teardown(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
 }
 
-EXPORT_SINGLE_STATE("RALExpController_VelLimitPose", RALExpController_VelLimitPose)
+EXPORT_SINGLE_STATE("RALExpController_JointLimComp", RALExpController_JointLimComp)

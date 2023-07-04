@@ -2,7 +2,7 @@
 
 #include <mc_control/fsm/State.h>
 
-struct RALExpController_VelLimitEF : mc_control::fsm::State
+struct RALExpController_JointLimNonComp : mc_control::fsm::State
 {
 
   void configure(const mc_rtc::Configuration & config) override;
@@ -15,8 +15,5 @@ struct RALExpController_VelLimitEF : mc_control::fsm::State
 
 private:
   double elapsedTime_;
-  double jointVel;
-  double upperLimit;
-  double lowerLimit;
-  double maxLimitCross_;
+  double jointRef_;
 };

@@ -9,5 +9,8 @@ add_fsm_state_simple(RALExpController_NSNonCompliant)
 add_fsm_state_simple(RALExpController_VelLimitNoEF)
 add_fsm_state_simple(RALExpController_VelLimitEF)
 add_fsm_state_simple(RALExpController_VelLimitPose)
+add_fsm_state_simple(RALExpController_JointLimNonComp)
+add_fsm_state_simple(RALExpController_JointLimComp)
+add_fsm_state_simple(RALExpController_JointLimPose)
 
 add_fsm_data_directory(data)

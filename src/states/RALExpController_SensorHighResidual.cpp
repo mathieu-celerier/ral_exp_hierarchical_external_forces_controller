@@ -9,12 +9,12 @@ void RALExpController_SensorHighResidual::start(mc_control::fsm::Controller & ct
   auto & ctl = static_cast<RALExpController &>(ctl_);
 
   // Disable feedback from external forces estimator (safer)
-  if (!ctl.datastore().call<bool>("EF_Estimator::isActive"))
+  if(!ctl.datastore().call<bool>("EF_Estimator::isActive"))
   {
     ctl.datastore().call("EF_Estimator::toggleActive");
   }
   // Disable force sensor usage if active
-  if (ctl.datastore().call<bool>("EF_Estimator::useForceSensor"))
+  if(ctl.datastore().call<bool>("EF_Estimator::useForceSensor"))
   {
     ctl.datastore().call("EF_Estimator::toggleForceSensor");
   }
@@ -23,14 +23,14 @@ void RALExpController_SensorHighResidual::start(mc_control::fsm::Controller & ct
   // Setting gain of posture task for torque control mode
   ctl.compPostureTask->stiffness(20.0);
 
-  ctl.datastore().assign<std::string>("ControlMode","Torque");  
+  ctl.datastore().assign<std::string>("ControlMode", "Torque");
   mc_rtc::log::success("[RALExpController] Switched to Sensor Testing state - Position controlled");
 }
 
 bool RALExpController_SensorHighResidual::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  output("OK"); 
+  output("OK");
   return true;
 }
 

@@ -22,8 +22,22 @@ struct RALExpController_DLLAPI RALExpController : public mc_control::fsm::Contro
 
   bool moveNextState;
   std::map<std::string, std::vector<double>> postureVelLimit;
+  std::map<std::string, std::vector<double>> postureJointLim;
   std::map<std::string, std::vector<double>> postureTarget;
   Eigen::VectorXd posture_target_log;
+
+  int velLimitCount;
+  double velLimitDuration;
+
+  int jointLimitCount;
+  double jointLimitDuration;
+
+  int velLimitCounter;
+  int jointLimitCounter;
+
+  int currentSequence;
+  std::string sequenceOutput;
+  bool waitingForInput;
 
 private:
   mc_rtc::Configuration config_;
