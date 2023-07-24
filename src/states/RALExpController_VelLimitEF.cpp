@@ -10,7 +10,7 @@ void RALExpController_VelLimitEF::start(mc_control::fsm::Controller & ctl_)
   auto & ctl = static_cast<RALExpController &>(ctl_);
   ctl.solver().removeConstraintSet(ctl.dynamicsConstraint);
   ctl.dynamicsConstraint = mc_rtc::unique_ptr<mc_solver::DynamicsConstraint>(
-      new mc_solver::DynamicsConstraint(ctl.robots(), 0, ctl.solver().dt(), {0.1, 0.01, 0.5}, 0.6, false, true));
+      new mc_solver::DynamicsConstraint(ctl.robots(), 0, ctl.solver().dt(), {0.1, 0.01, 0.5}, 0.5, false, true));
   ctl.solver().addConstraintSet(ctl.dynamicsConstraint);
 
   // Deactivate feedback from external forces estimator (safer)

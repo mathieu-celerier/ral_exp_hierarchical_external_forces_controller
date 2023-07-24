@@ -36,6 +36,8 @@ void RALExpController_NSNonCompliant::start(mc_control::fsm::Controller & ctl_)
 
   ctl.compPostureTask->makeCompliant(false);
 
+  ctl.waitingForInput = true;
+
   ctl.datastore().assign<std::string>("ControlMode", "Torque");
   mc_rtc::log::success("[RALExpController] Switched to Sensor Testing state - Position controlled");
 }
@@ -43,8 +45,14 @@ void RALExpController_NSNonCompliant::start(mc_control::fsm::Controller & ctl_)
 bool RALExpController_NSNonCompliant::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  output("OK");
-  return true;
+  
+  if(not ctl.waitingForInput)
+  {
+    output("OK");
+    return true;
+  }
+
+  return false;
 }
 
 void RALExpController_NSNonCompliant::teardown(mc_control::fsm::Controller & ctl_)

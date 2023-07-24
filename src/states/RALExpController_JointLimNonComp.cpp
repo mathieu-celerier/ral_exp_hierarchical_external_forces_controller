@@ -33,7 +33,7 @@ void RALExpController_JointLimNonComp::start(mc_control::fsm::Controller & ctl_)
   elapsedTime_ = 0;
   ctl.jointLimitCounter++;
 
-  jointRef_ = ctl.postureJointLim["Joint_4"][0];
+  jointRef_ = ctl.postureJointLim["joint_4"][0];
 
   ctl.logger().addLogEntry("JointLimit_ref_pose", [this]() { return this->jointRef_; });
 

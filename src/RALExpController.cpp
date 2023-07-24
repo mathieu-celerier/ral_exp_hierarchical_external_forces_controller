@@ -5,7 +5,7 @@ RALExpController::RALExpController(mc_rbdyn::RobotModulePtr rm, double dt, const
 {
   // Setup custom dynamic constraints
   dynamicsConstraint = mc_rtc::unique_ptr<mc_solver::DynamicsConstraint>(
-      new mc_solver::DynamicsConstraint(robots(), 0, solver().dt(), {0.1, 0.01, 0.5}, 0.6, false, true));
+      new mc_solver::DynamicsConstraint(robots(), 0, solver().dt(), {0.1, 0.01, 0.5}, 0.9, false, true));
 
   solver().addConstraintSet(dynamicsConstraint);
 
@@ -21,14 +21,14 @@ RALExpController::RALExpController(mc_rbdyn::RobotModulePtr rm, double dt, const
   compPostureTask->damping(4.0);
   compPostureTask->target(postureTarget);
   solver().addTask(compPostureTask);
-
+  
   eeTask = std::make_shared<mc_tasks::EndEffectorTask>(robot().frame("tool_frame"));
 
   postureVelLimit = {{"joint_1", {1.57}}, {"joint_2", {0}}, {"joint_3", {1.57}}, {"joint_4", {-1.57}},
                      {"joint_5", {1.57}}, {"joint_6", {0}}, {"joint_7", {-1.06}}};
 
   postureJointLim = {{"joint_1", {0}}, {"joint_2", {1.57}}, {"joint_3", {-0.6}}, {"joint_4", {-1.57}},
-                     {"joint_5", {0}}, {"joint_6", {0}},    {"joint_7", {-1.06}}};
+                     {"joint_5", {0}}, {"joint_6", {0}},    {"joint_7", {2.08}}};
 
   velLimitCount = config("sequences")("velLimit")("repetitions");
   velLimitDuration = config("sequences")("velLimit")("duration");

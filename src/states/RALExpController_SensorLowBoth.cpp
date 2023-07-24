@@ -23,6 +23,8 @@ void RALExpController_SensorLowBoth::start(mc_control::fsm::Controller & ctl_)
   // Setting gain of posture task for torque control mode
   ctl.compPostureTask->stiffness(20.0);
 
+  ctl.waitingForInput = true;
+
   ctl.datastore().assign<std::string>("ControlMode", "Torque");
   mc_rtc::log::success("[RALExpController] Switched to Sensor Testing state - Position controlled");
 }
@@ -30,8 +32,14 @@ void RALExpController_SensorLowBoth::start(mc_control::fsm::Controller & ctl_)
 bool RALExpController_SensorLowBoth::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  output("OK");
-  return true;
+
+  if(not ctl.waitingForInput)
+  {
+    output("OK");
+    return true;
+  }
+  
+  return false;
 }
 
 void RALExpController_SensorLowBoth::teardown(mc_control::fsm::Controller & ctl_)

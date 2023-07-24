@@ -34,18 +34,24 @@ collisions:
 # Transitions map
 transitions:
 - [RALExpController_Initial, OK, RALExpController_VelLimitPose, Auto]
+# - [RALExpController_SensorHighBoth, OK, RALExpController_SensorHighResidual, Auto]
+# - [RALExpController_SensorHighResidual, OK, RALExpController_SensorLowBoth, Auto]
+# - [RALExpController_SensorLowBoth, OK, RALExpController_SensorLowResidual, Auto]
+# - [RALExpController_SensorLowResidual, OK, RALExpController_NSNonCompliant, Auto]
+# - [RALExpController_NSNonCompliant, OK, RALExpController_NSCompliant, Auto]
+# - [RALExpController_NSCompliant, OK, RALExpController_VelLimitPose, Auto]
 - [RALExpController_VelLimitPose, A, RALExpController_VelLimitEF, Auto]
 - [RALExpController_VelLimitEF, A, RALExpController_VelLimitPose, Auto]
 - [RALExpController_VelLimitEF, FINISHED, RALExpController_VelLimitPose, Auto]
 - [RALExpController_VelLimitPose, B, RALExpController_VelLimitNoEF, Auto]
 - [RALExpController_VelLimitNoEF, B, RALExpController_VelLimitPose, Auto]
-- [RALExpController_VelLimitNoEF, FINISHED, RALExpController_JointLimPose, Auto]
-- [RALExpController_JointLimPose, A, RALExpController_JointLimNonComp, Auto]
-- [RALExpController_JointLimNonComp, A, RALExpController_JointLimPose, Auto]
-- [RALExpController_JointLimNonComp, FINISHED, RALExpController_JointLimPose, Auto]
-- [RALExpController_JointLimPose, B, RALExpController_JointLimComp, Auto]
-- [RALExpController_JointLimComp, B, RALExpController_JointLimPose, Auto]
-- [RALExpController_JointLimComp, FINISHED, RALExpController_Initial, Auto]
+- [RALExpController_VelLimitNoEF, FINISHED, RALExpController_Initial, Auto]
+# - [RALExpController_JointLimPose, A, RALExpController_JointLimNonComp, Auto]
+# - [RALExpController_JointLimNonComp, A, RALExpController_JointLimPose, Auto]
+# - [RALExpController_JointLimNonComp, FINISHED, RALExpController_JointLimPose, Auto]
+# - [RALExpController_JointLimPose, B, RALExpController_JointLimComp, Auto]
+# - [RALExpController_JointLimComp, B, RALExpController_JointLimPose, Auto]
+# - [RALExpController_JointLimComp, FINISHED, RALExpController_Initial, Auto]
 
 # Initial state
 init: RALExpController_Initial
@@ -59,7 +65,7 @@ ObserverPipelines:
 
 sequences:
   velLimit:
-    repetitions: 3
+    repetitions: 2
     duration: 2
   jointLimit:
     repetitions: 3
