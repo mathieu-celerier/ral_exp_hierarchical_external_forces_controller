@@ -8,17 +8,17 @@ void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
   ctl.solver().removeConstraintSet(ctl.dynamicsConstraint);
-  ctl.dynamicsConstraint = mc_rtc::unique_ptr<mc_solver::DynamicsConstraint>(new mc_solver::DynamicsConstraint(ctl.robots(), 0, ctl.solver().dt(), {0.1, 0.01, 0.5}, 0.6, false, true));
+  ctl.dynamicsConstraint = mc_rtc::unique_ptr<mc_solver::DynamicsConstraint>(
+      new mc_solver::DynamicsConstraint(ctl.robots(), 0, ctl.solver().dt(), {0.1, 0.01, 0.5}, 0.6, false, true));
   ctl.solver().addConstraintSet(ctl.dynamicsConstraint);
 
-
   // Deactivate feedback from external forces estimator (safer)
-  if (ctl.datastore().call<bool>("EF_Estimator::isActive"))
+  if(ctl.datastore().call<bool>("EF_Estimator::isActive"))
   {
     ctl.datastore().call("EF_Estimator::toggleActive");
   }
   // Activate force sensor usage if not used yet
-  if (!ctl.datastore().call<bool>("EF_Estimator::useForceSensor"))
+  if(!ctl.datastore().call<bool>("EF_Estimator::useForceSensor"))
   {
     ctl.datastore().call("EF_Estimator::toggleForceSensor");
   }
@@ -30,14 +30,14 @@ void RALExpController_VelLimitPose::start(mc_control::fsm::Controller & ctl_)
   ctl.compPostureTask->makeCompliant(false);
   ctl.solver().removeTask(ctl.eeTask);
 
-  ctl.datastore().assign<std::string>("ControlMode","Position");  
+  ctl.datastore().assign<std::string>("ControlMode", "Position");
   mc_rtc::log::success("[RALExpController] Switched to Sensor Testing state - Position controlled");
 }
 
 bool RALExpController_VelLimitPose::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  output("OK"); 
+  output("OK");
   return true;
 }
 

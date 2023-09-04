@@ -8,7 +8,7 @@ void RALExpController_Initial::start(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
 
-  ctl.datastore().assign<std::string>("ControlMode","Position");  
+  ctl.datastore().assign<std::string>("ControlMode", "Position");
   mc_rtc::log::success("[RALExpController] Switched to Initial state - Position controlled");
 }
 
