@@ -35,8 +35,8 @@ void RALExpController_VelLimitNoEF::start(mc_control::fsm::Controller & ctl_)
   ctl.velLimitCounter++;
 
   jointVel = 0.0;
-  upperLimit = 0.6*ctl.robot().tvmRobot().limits().vu[3];
-  lowerLimit = 0.6*ctl.robot().tvmRobot().limits().vl[3];
+  upperLimit = 0.6 * ctl.robot().tvmRobot().limits().vu[3];
+  lowerLimit = 0.6 * ctl.robot().tvmRobot().limits().vl[3];
   maxLimitCross_ = 0.0;
 
   ctl.logger().addLogEntry("VelLimit_NoEf_limit_violated", [this]() {
@@ -71,7 +71,7 @@ bool RALExpController_VelLimitNoEF::run(mc_control::fsm::Controller & ctl_)
 
   jointVel = ctl.realRobot().encoderVelocities()[3];
 
-  if (jointVel < maxLimitCross_)
+  if(jointVel < maxLimitCross_)
   {
     maxLimitCross_ = jointVel;
   }

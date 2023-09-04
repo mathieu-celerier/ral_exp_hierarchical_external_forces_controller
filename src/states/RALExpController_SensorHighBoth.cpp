@@ -38,7 +38,7 @@ bool RALExpController_SensorHighBoth::run(mc_control::fsm::Controller & ctl_)
     output("OK");
     return true;
   }
-  
+
   return false;
 }
 

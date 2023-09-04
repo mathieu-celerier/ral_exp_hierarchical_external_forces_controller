@@ -45,13 +45,13 @@ void RALExpController_NSCompliant::start(mc_control::fsm::Controller & ctl_)
 bool RALExpController_NSCompliant::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  
+
   if(not ctl.waitingForInput)
   {
     output("OK");
     return true;
   }
-  
+
   return false;
 }
 

@@ -45,7 +45,7 @@ void RALExpController_NSNonCompliant::start(mc_control::fsm::Controller & ctl_)
 bool RALExpController_NSNonCompliant::run(mc_control::fsm::Controller & ctl_)
 {
   auto & ctl = static_cast<RALExpController &>(ctl_);
-  
+
   if(not ctl.waitingForInput)
   {
     output("OK");

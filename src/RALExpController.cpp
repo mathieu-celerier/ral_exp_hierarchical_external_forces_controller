@@ -21,7 +21,7 @@ RALExpController::RALExpController(mc_rbdyn::RobotModulePtr rm, double dt, const
   compPostureTask->damping(4.0);
   compPostureTask->target(postureTarget);
   solver().addTask(compPostureTask);
-  
+
   eeTask = std::make_shared<mc_tasks::EndEffectorTask>(robot().frame("tool_frame"));
 
   postureVelLimit = {{"joint_1", {1.57}}, {"joint_2", {0}}, {"joint_3", {1.57}}, {"joint_4", {-1.57}},
