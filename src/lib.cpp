@@ -1,5 +1,5 @@
-#include <RALExpController/RALExpController.h>
+#include <RALExpHierarchicalController/RALExpHierarchicalController.h>
 
 #include <mc_control/mc_controller.h>
 
-CONTROLLER_CONSTRUCTOR("RALExpController", RALExpController)
+CONTROLLER_CONSTRUCTOR("RALExpHierarchicalController", RALExpHierarchicalController)

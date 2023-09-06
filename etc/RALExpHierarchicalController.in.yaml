@@ -1,0 +1,91 @@
+---
+# If true, the FSM transitions are managed by an external tool
+Managed: false
+# If true and the FSM is self-managed, transitions should be triggered
+StepByStep: true
+# Change idle behaviour, if true the state is kept until transition,
+# otherwise the FSM holds the last state until transition
+IdleKeepState: false
+# Where to look for state libraries
+StatesLibraries:
+- "@MC_STATES_DEFAULT_RUNTIME_INSTALL_PREFIX@"
+- "@MC_STATES_RUNTIME_INSTALL_PREFIX@"
+# Where to look for state files
+StatesFiles:
+- "@MC_STATES_DEFAULT_RUNTIME_INSTALL_PREFIX@/data"
+- "@MC_STATES_RUNTIME_INSTALL_PREFIX@/data"
+# If true, state factory will be more verbose
+VerboseStateFactory: false
+# Additional robots to load
+robots:
+  ground:
+    module: env/ground
+# General constraints, always on
+# constraints:
+# - type: dynamics
+#   damper: [0.1, 0.01, 0.5]
+# - type: compoundJoint
+
+# Collision constraint
+collisions:
+- type: collision
+  useMinimal: true
+
+# Implement some additional text states
+states:
+  RALExpHierarchical_FSM_MainExp:
+    base: Meta
+    Managed: false
+    StepByStep: true
+      
+    transitions:
+      - [RALExpHierarchicalController_SensorHighBoth, OK, RALExpHierarchicalController_SensorHighResidual, Strict]
+      - [RALExpHierarchicalController_SensorHighResidual, OK, RALExpHierarchicalController_SensorLowBoth, Strict]
+      - [RALExpHierarchicalController_SensorLowBoth, OK, RALExpHierarchicalController_SensorLowResidual, Strict]
+      - [RALExpHierarchicalController_SensorLowResidual, OK, RALExpHierarchicalController_NSNonCompliant, Strict]
+      - [RALExpHierarchicalController_NSNonCompliant, OK, RALExpHierarchicalController_NSCompliant, Strict]
+      - [RALExpHierarchicalController_NSCompliant, OK, RALExpHierarchicalController_VelLimitPose, Strict]
+      - [RALExpHierarchicalController_VelLimitPose, OK, RALExpHierarchicalController_VelLimitEF, Strict]
+      - [RALExpHierarchicalController_VelLimitEF, OK, RALExpHierarchicalController_VelLimitNoEF, Strict]
+
+  RALExpHierarchical_FSM_DropExp:
+    base: Meta
+    Managed: false
+    StepByStep: true
+
+    transitions:
+      - [RALExpHierarchicalController_VelLimitPose, A, RALExpHierarchicalController_VelLimitEF, Auto]
+      - [RALExpHierarchicalController_VelLimitEF, A, RALExpHierarchicalController_VelLimitPose, Auto]
+      - [RALExpHierarchicalController_VelLimitEF, FINISHED, RALExpHierarchicalController_VelLimitPose, Auto]
+      - [RALExpHierarchicalController_VelLimitPose, B, RALExpHierarchicalController_VelLimitNoEF, Auto]
+      - [RALExpHierarchicalController_VelLimitNoEF, B, RALExpHierarchicalController_VelLimitPose, Auto]
+      - [RALExpHierarchicalController_VelLimitNoEF, FINISHED, RALExpHierarchicalController_Initial, Auto]
+      # - [RALExpHierarchicalController_JointLimPose, A, RALExpHierarchicalController_JointLimNonComp, Auto]
+      # - [RALExpHierarchicalController_JointLimNonComp, A, RALExpHierarchicalController_JointLimPose, Auto]
+      # - [RALExpHierarchicalController_JointLimNonComp, FINISHED, RALExpHierarchicalController_JointLimPose, Auto]
+      # - [RALExpHierarchicalController_JointLimPose, B, RALExpHierarchicalController_JointLimComp, Auto]
+      # - [RALExpHierarchicalController_JointLimComp, B, RALExpHierarchicalController_JointLimPose, Auto]
+      # - [RALExpHierarchicalController_JointLimComp, FINISHED, RALExpHierarchicalController_Initial, Auto]
+
+# Transitions map
+transitions:
+  - [RALExpHierarchicalController_Initial, MAIN, RALExpHierarchical_FSM_MainExp, Strict]
+  - [RALExpHierarchicalController_Initial, DROPS, RALExpHierarchical_FSM_DropExp, Strict]
+
+# Initial state
+init: RALExpHierarchicalController_Initial
+
+ObserverPipelines:
+- name: Pipeline
+  observers:
+    - type: Encoder
+      config:
+        velocity: encoderVelocities
+
+sequences:
+  velLimit:
+    repetitions: 3
+    duration: 2
+  jointLimit:
+    repetitions: 3
+    duration: 2

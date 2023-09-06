@@ -11,15 +11,15 @@ It comes with:
 Quick start
 --
 
-1. Renaming the controller from `RALExpController` to `MyController`. In a shell (Git Bash on Windows, replace sed with gsed on macOS):
+1. Renaming the controller from `RALExpHierarchicalController` to `MyController`. In a shell (Git Bash on Windows, replace sed with gsed on macOS):
 
 ```bash
-sed -i -e's/RALExpController/MyController/g' `find . -type f`
-git mv src/RALExpController.cpp src/MyController.cpp
-git mv src/RALExpController.h src/MyController.h
-git mv src/states/RALExpController_Initial.cpp src/states/MyController_Initial.cpp
-git mv src/states/RALExpController_Initial.h src/states/MyController_Initial.h
-git mv etc/RALExpController.in.yaml etc/MyController.in.yaml
+sed -i -e's/RALExpHierarchicalController/MyController/g' `find . -type f`
+git mv src/RALExpHierarchicalController.cpp src/MyController.cpp
+git mv src/RALExpHierarchicalController.h src/MyController.h
+git mv src/states/RALExpHierarchicalController_Initial.cpp src/states/MyController_Initial.cpp
+git mv src/states/RALExpHierarchicalController_Initial.h src/states/MyController_Initial.h
+git mv etc/RALExpHierarchicalController.in.yaml etc/MyController.in.yaml
 ```
 
 2. You can customize the project name in vcpkg.json as well, note that this must follow [vcpkg manifest rules](https://github.com/microsoft/vcpkg/blob/master/docs/users/manifests.md)

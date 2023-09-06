@@ -1,8 +1,8 @@
 file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/etc/mc_rtc.yaml" INPUT "${CMAKE_CURRENT_SOURCE_DIR}/etc/mc_rtc.yaml")
 
-set(MC_STATES_RUNTIME_INSTALL_PREFIX "$<TARGET_FILE_DIR:RALExpController_Initial>")
-configure_file("${PROJECT_SOURCE_DIR}/etc/RALExpController.in.yaml" "${CMAKE_CURRENT_BINARY_DIR}/etc/RALExpController.cmake.yaml")
-file(GENERATE OUTPUT "$<TARGET_FILE_DIR:RALExpController>/etc/RALExpController.yaml" INPUT "${CMAKE_CURRENT_BINARY_DIR}/etc/RALExpController.cmake.yaml")
+set(MC_STATES_RUNTIME_INSTALL_PREFIX "$<TARGET_FILE_DIR:RALExpHierarchicalController_Initial>")
+configure_file("${PROJECT_SOURCE_DIR}/etc/RALExpHierarchicalController.in.yaml" "${CMAKE_CURRENT_BINARY_DIR}/etc/RALExpHierarchicalController.cmake.yaml")
+file(GENERATE OUTPUT "$<TARGET_FILE_DIR:RALExpHierarchicalController>/etc/RALExpHierarchicalController.yaml" INPUT "${CMAKE_CURRENT_BINARY_DIR}/etc/RALExpHierarchicalController.cmake.yaml")
 
 if(MSVC AND _VCPKG_INSTALLED_DIR)
   set(VCPKG_INSTALL_PREFIX "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_PREFIX}")

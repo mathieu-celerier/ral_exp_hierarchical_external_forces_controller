@@ -1,4 +1,4 @@
-name: CI of RALExpController
+name: CI of RALExpHierarchicalController
 
 on:
   push:
