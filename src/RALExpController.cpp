@@ -55,19 +55,23 @@ RALExpController::RALExpController(mc_rbdyn::RobotModulePtr rm, double dt, const
   gui()->addElement({"Controller"}, mc_rtc::gui::Button("Move to next state", [this]() { waitingForInput = false; }));
 
   // Add log entries
-  logger().addLogEntry("ControlMode", [this]() {
-    auto mode = datastore().get<std::string>("ControlMode");
-    if(mode.compare("") == 0) return 0;
-    if(mode.compare("Position") == 0) return 1;
-    if(mode.compare("Velocity") == 0) return 2;
-    if(mode.compare("Torque") == 0) return 3;
-    return 0;
-  });
+  logger().addLogEntry("ControlMode",
+                       [this]()
+                       {
+                         auto mode = datastore().get<std::string>("ControlMode");
+                         if(mode.compare("") == 0) return 0;
+                         if(mode.compare("Position") == 0) return 1;
+                         if(mode.compare("Velocity") == 0) return 2;
+                         if(mode.compare("Torque") == 0) return 3;
+                         return 0;
+                       });
 
-  logger().addLogEntry("PostureTarget", [this]() {
-    this->getPostureTarget();
-    return this->posture_target_log;
-  });
+  logger().addLogEntry("PostureTarget",
+                       [this]()
+                       {
+                         this->getPostureTarget();
+                         return this->posture_target_log;
+                       });
 
   logger().addLogEntry("StateIndex", [this]() { return this->stateIndex_; });
 
